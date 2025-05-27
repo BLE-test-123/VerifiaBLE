@@ -13,8 +13,8 @@ os.environ.pop("http_proxy", None)
 os.environ.pop("https_proxy", None)
 os.environ.pop("all_proxy", None)
 
-os.environ["OPENAI_API_KEY"] = "sk-ja7JFi35iaYyMwICC72bB719EeE84aA1A1F2A531524cEf2d"
-os.environ["OPENAI_API_BASE"] = "https://ai-yyds.com/v1"
+os.environ["OPENAI_API_KEY"] = "<YOUR_OPENAI_API_KEY>"
+os.environ["OPENAI_API_BASE"] = "<YOUR_OPENAI_API_BASE>"
 
 api_base = os.getenv("OPENAI_API_BASE")
 api_key = os.getenv("OPENAI_API_KEY")
@@ -47,9 +47,8 @@ class Master:
         )
 
     def extract_functions(self, java_code):
-        """提取Java文件中的所有函数"""
+        """Extract all functions from the Java file."""
         function_pattern = re.compile(r'(\w+)\s*\(')
-        # function_pattern = re.compile(r'\w+\s+\w+\(.*\)\s*{')
         functions = []
 
         lines = java_code.split('\n')
@@ -78,7 +77,7 @@ class Master:
         return functions
 
     def check_authentication_related(self, function_code):
-        """通过大模型判断这个函数是否与身份认证相关"""
+        """Determine if this function is related to authentication using a large model."""
         prompt = """Task Objective: Determine whether a given Java function is related to Bluetooth authentication protocols and output a simple "yes" or "no".
                     Criteria:
                         1. Device Connection State Changes: If the function initiates the authentication process after a device successfully connects (e.g., calling an authentication function in onConnectionStateChange), it is related to authentication. Output "yes".
@@ -93,7 +92,6 @@ class Master:
                         3. Let's think step by step, but the final output only returns "yes" or "no".
                     Given Java Function: {function_code}"""
 
-
         chain = ChatPromptTemplate.from_template(prompt) | self.chatmodel | StrOutputParser()
 
         print(function_code)
@@ -102,30 +100,24 @@ class Master:
         return 'yes' in result.strip().lower()
 
     def save_relevant_functions(self, functions, input_file_path):
-        """保存与身份认证相关的函数及其函数体"""
-        # 获取输入文件名并生成输出文件名
+        """Save functions related to authentication and their bodies."""
         base_filename = os.path.basename(input_file_path)
         filename_without_extension = os.path.splitext(base_filename)[0]
 
-        output_file_path = f"/home/biwei/Desktop/BLE_LLM/case/filter/{filename_without_extension}_auth.java"
+        output_file_path = f"<OUTPUT_FILTER_DIR>/{filename_without_extension}_auth.java"
         os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
         with open(output_file_path, 'w', encoding='utf-8') as file:
             for func_name, func_body in functions:
-                # file.write(f"Function: {func_name}\n")
-                # file.write(f"Function Body:\n{func_body}\n\n")
                 file.write(f"{func_body}\n\n")
-        print(f"与身份认证相关的函数已保存到文件: {output_file_path}")
+        print(f"Functions related to authentication have been saved to: {output_file_path}")
 
     def process_java_file(self, file_path):
-
-        """处理Java文件"""
+        """Process a Java file."""
         try:
             with open(file_path, 'r', encoding='utf-8') as file:
                 java_code = file.read()
-            # with open(example_path, 'r', encoding='utf-8') as file:
-            #     example_code = file.read()
         except FileNotFoundError:
-            print(f"文件未找到: {file_path}")
+            print(f"File not found: {file_path}")
             return
 
         functions = self.extract_functions(java_code)
@@ -141,36 +133,31 @@ class Master:
         else:
             base_filename = os.path.basename(file_path)
             filename_without_extension = os.path.splitext(base_filename)[0]
-            output_file_path = f"/home/biwei/Desktop/BLE_LLM/case/filter/{filename_without_extension}_auth.java"
+            output_file_path = f"<OUTPUT_FILTER_DIR>/{filename_without_extension}_auth.java"
             os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
             with open(output_file_path, 'w', encoding='utf-8') as file:
                 for func_name, func_body in functions:
-                    # file.write(f"Function: {func_name}\n")
-                    # file.write(f"Function Body:\n{func_body}\n\n")
                     file.write("No authentication related functions found.")
 
-            print("未找到与身份认证相关的函数。")
+            print("No authentication related functions were found.")
 
 if __name__ == "__main__":
     master = Master()
 
-    # 设置Java文件路径
-    # java_file_path = 'java/BluetoothRevThread.java'  # 修改为你的文件路径
-    java_folder_path = '/home/biwei/Desktop/BLE_LLM/case/filterv2'  # 修改为你的文件路径
-    """遍历java/文件夹下的所有Java文件，并进行处理"""
+    # Set Java folder path
+    java_folder_path = '<JAVA_FOLDER_PATH>'
+    """Traverse all Java files in the java/ directory and process them."""
     for root, _, files in os.walk(java_folder_path):
         for file in files:
             if file.endswith(".java"):
                 file_path = os.path.join(root, file)
-                # 生成输出文件路径
                 base_filename = os.path.basename(file_path)
                 filename_without_extension = os.path.splitext(base_filename)[0]
-                output_file_path = f"/home/biwei/Desktop/BLE_LLM/case/filterv3/{filename_without_extension}_auth.java"
+                output_file_path = f"<OUTPUT_FILTERV3_DIR>/{filename_without_extension}_auth.java"
 
-                # **检查文件是否已经存在**
+                # Check if the file already exists
                 if os.path.exists(output_file_path):
-                    print(f"已存在: {output_file_path}，跳过处理。")
+                    print(f"Already exists: {output_file_path}, skipping.")
                     continue
-                print(f"处理文件: {file_path}")
+                print(f"Processing file: {file_path}")
                 master.process_java_file(file_path)
-
