@@ -4,7 +4,7 @@ This repository contains scripts and tools for detecting potential vulnerabiliti
 
 ## Overview
 
-The entire process is divided into **4 main phases**. Each script corresponds to a specific phase:
+The entire process is divided into 4 main phases. Each script corresponds to a specific phase:
 
 1. **`BLE_app_choose`**  
    This script is responsible for selecting the BLE-related Android application for analysis. It identifies the target APK file that will be decompiled and analyzed in subsequent steps.
