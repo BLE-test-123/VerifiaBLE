@@ -35,7 +35,7 @@ Each script is numbered according to the execution order. Please ensure you run 
 
 ```bash
 python BLE_app_choose.py
-python OpenAI-v2-encrypt-features-extract.py
+python OpenAI-encrypt-features-extract.py
 python server_auth_identify.py
 python server_proverif_generate.py
 python command-proverif-error-exact.py
