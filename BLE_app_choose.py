@@ -4,13 +4,13 @@ from androguard.misc import AnalyzeAPK
 
 def analyze_ble_apk(apk_path: str):
     try:
-        # 分析APK文件
+        # Analyze the APK file
         a, d, dx = AnalyzeAPK(apk_path)
     except Exception as e:
-        print(f"无法分析APK文件 {apk_path}: {e}")
+        print(f"Failed to analyze APK file {apk_path}: {e}")
         return False
 
-    # 扩展的BLE权限列表
+    # Extended BLE permissions list
     ble_permissions = [
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
@@ -23,13 +23,13 @@ def analyze_ble_apk(apk_path: str):
         "android.permission.BLUETOOTH_BACKGROUND"
     ]
 
-    # 获取APK声明的所有权限
+    # Get all permissions declared in the APK
     permissions = a.get_permissions()
 
-    # 检查是否声明了任何BLE相关权限
+    # Check if any BLE-related permission is declared
     ble_permissions_found = [perm for perm in permissions if perm in ble_permissions]
 
-    # 扩展的BLE相关类列表
+    # Extended BLE-related class list
     ble_classes = [
         "Landroid/bluetooth/BluetoothAdapter;",
         "Landroid/bluetooth/BluetoothDevice;",
@@ -49,7 +49,7 @@ def analyze_ble_apk(apk_path: str):
         "Landroid/bluetooth/BluetoothSocket;"
     ]
 
-    # 扩展的与数据交换相关的方法名
+    # Extended BLE-related method names for data exchange
     ble_methods = [
         "connect",
         "disconnect",
@@ -71,10 +71,10 @@ def analyze_ble_apk(apk_path: str):
         "getBluetoothManager"
     ]
 
-    # 用于存储检测到的BLE API调用
+    # Used to store detected BLE API calls
     ble_api_calls = []
 
-    # 遍历所有方法，检查是否使用了BLE相关的API
+    # Traverse all methods to check for BLE-related API usage
     for method in dx.get_methods():
         method_analysis = method
         class_name = method.class_name
@@ -84,45 +84,45 @@ def analyze_ble_apk(apk_path: str):
         if not code or not hasattr(code, 'get_instructions'):
             continue
 
-        # 遍历方法的代码字符串
+        # Traverse the code instructions of the method
         for instruction in code.get_instructions():
             output = instruction.get_output()
 
-            # 检查指令中是否包含BLE相关的类和方法
+            # Check if BLE-related class and method are included in the instruction
             if any(ble_class in output for ble_class in ble_classes) and any(
                     ble_method in output for ble_method in ble_methods):
                 ble_api_calls.append((class_name, method_name, output))
 
-    # 判断是否是BLE应用程序
+    # Determine if this is a BLE application
     if ble_permissions_found and ble_api_calls:
         return True
     else:
         return False
 
 def process_apks_in_folder(folder_path: str):
-    # 创建存储BLE应用的文件夹
+    # Create a folder to store BLE applications
     ble_folder = os.path.join(folder_path, "BLE_filter")
     if not os.path.exists(ble_folder):
         os.makedirs(ble_folder)
 
-    # 遍历文件夹中的所有APK文件
+    # Traverse all APK files in the folder
     for filename in os.listdir(folder_path):
         if filename.endswith(".apk"):
             apk_path = os.path.join(folder_path, filename)
 
-            # 检查目标文件夹中是否已有该APK
+            # Check if the target folder already has this APK
             if filename in os.listdir(ble_folder):
-                print(f"BLE_filter 文件夹中已存在 {filename}，跳过。")
+                print(f"{filename} already exists in BLE_filter folder, skipping.")
                 continue
 
             if analyze_ble_apk(apk_path):
-                # 如果是BLE应用，将其移动到ble_filter文件夹
+                # If it's a BLE application, move it to ble_filter folder
                 destination_path = os.path.join(ble_folder, filename)
                 shutil.move(apk_path, destination_path)
-                print(f"检测到BLE应用并已移动：{filename}")
+                print(f"Detected BLE application and moved: {filename}")
             else:
-                print(f"非BLE应用：{filename}")
+                print(f"Not a BLE application: {filename}")
 
 if __name__ == "__main__":
-    folder_path = "/home/biwei/Desktop/data-rating2022/Androzoo/Benign/2022"  # 请替换为你的APK文件夹路径
+    folder_path = "<YOUR_FOLDER_PATH>"  # 👉 Replace with your APK folder path
     process_apks_in_folder(folder_path)
