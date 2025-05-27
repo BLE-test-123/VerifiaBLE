@@ -33,10 +33,10 @@ os.environ.pop("https_proxy", None)
 os.environ.pop("all_proxy", None)
 app = FastAPI()
 
-os.environ["OPENAI_API_KEY"] = "sk-ja7JFi35iaYyMwICC72bB719EeE84aA1A1F2A531524cEf2d"
-os.environ["OPENAI_API_BASE"] = "https://ai-yyds.com/v1"
-os.environ["SERPAPI_API_KEY"] = "eb82d9c15800e07bda9df58072e068ba5ea54c539790dc1032259e77287afe31"
-REDIS_URL = "redis://localhost:6379/0"
+os.environ["OPENAI_API_KEY"] = "<YOUR_OPENAI_API_KEY>"
+os.environ["OPENAI_API_BASE"] = "<YOUR_OPENAI_API_BASE>"
+os.environ["SERPAPI_API_KEY"] = "<YOUR_SERPAPI_API_KEY>"
+REDIS_URL = "<REDIS_URL>"
 
 api_base = os.getenv("OPENAI_API_BASE")
 api_key = os.getenv("OPENAI_KEY")
@@ -53,7 +53,7 @@ def search(query: str):
 def get_info_from_local_db(query: str):
     """Use this tool only when answering questions related to proverif code, and you must input proverif code."""
     client = Qdrant(
-        QdrantClient(path="/home/biwei/Desktop/BLE_LLM/local_qdrand"),
+        QdrantClient(path="<LOCAL_QDRANT_PATH>"),
         "proverif_learning",
         OpenAIEmbeddings(model="text-embedding-ada-002"),
     )
@@ -118,7 +118,7 @@ async def add_pdfs(file: UploadFile = File(...)):
     qdrant = Qdrant.from_documents(
         documents,
         OpenAIEmbeddings(model="text-embedding-ada-002"),
-        path="/home/biwei/Desktop/BLE_LLM/local_qdrand/local_qdrand",
+        path="<LOCAL_QDRANT_VECTOR_DB_PATH>",
         collection_name="pdf_documents_2024",
     )
     print("Vector database creation completed")
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     master = Master()
 
     # Read Java file
-    file_path = '/home/biwei/Desktop/BLE_LLM/case/filterv2/yaokongqi_OpenAI-v2-encrypt-folder-ccc-filter_authv2.java'
+    file_path = '<JAVA_FILE_PATH>'
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             java_code = file.read()
