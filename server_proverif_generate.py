@@ -4,7 +4,6 @@ from langchain_core.prompts import ChatPromptTemplate, PromptTemplate, MessagesP
 from langchain.agents import create_openai_tools_agent, AgentExecutor, tool
 from langchain.memory import ConversationTokenBufferMemory
 from langchain_community.chat_message_histories import RedisChatMessageHistory
-# from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter, Language
 from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
@@ -13,7 +12,6 @@ from langchain.schema import Document
 from PyPDF2 import PdfReader
 import io
 import re
-# Output content as pure string
 from langchain.schema import StrOutputParser
 import uvicorn
 # Tools
