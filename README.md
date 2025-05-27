@@ -9,7 +9,7 @@ The entire process is divided into **five main phases**. Each script corresponds
 1. **`BLE_app_choose`**  
    This script is responsible for selecting the BLE-related Android application for analysis. It identifies the target APK file that will be decompiled and analyzed in subsequent steps.
 
-2. **`OpenAI-v2-encrypt-features-extract`**  
+2. **`OpenAI-encrypt-features-extract`**  
    This script extracts BLE-related features and relevant code segments from the decompiled source code. It applies code slicing to manage token limits when using LLM-based processing.
 
 3. **`server_auth_identify`**  
