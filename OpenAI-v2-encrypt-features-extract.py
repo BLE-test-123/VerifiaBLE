@@ -54,11 +54,11 @@ def find_files_with_extension(dir, extension):
 
 def decompile_apk(apk_path, base_output_dir, cfr_jar_path, dex2jar_path):
     """Decompile APK file using dex2jar and CFR."""
-    apk_name = os.path.splitext(os.path.basename(apk_path))[0]  # Extract the APK name without extension
+    apk_name = os.path.splitext(os.path.basename(apk_path))[0]
 
-    dex_output_dir = os.path.join(base_output_dir, "dex_files")  # Directory to extract DEX files
-    jar_output_dir_base = os.path.join(base_output_dir, "jar_files")  # Base directory to store JAR files
-    cfr_output_dir_base = os.path.join(base_output_dir, "cfr_files")  # Base output directory for CFR
+    dex_output_dir = os.path.join(base_output_dir, "dex_files")
+    jar_output_dir_base = os.path.join(base_output_dir, "jar_files")
+    cfr_output_dir_base = os.path.join(base_output_dir, "cfr_files")
 
     if not os.path.exists(apk_path):
         raise FileNotFoundError(f"APK file does not exist: {apk_path}")
@@ -102,10 +102,9 @@ def decompile_apk(apk_path, base_output_dir, cfr_jar_path, dex2jar_path):
 
 
 def main():
-    cfr_jar_path = "/usr/local/bin/software-cfr/cfr.jar"
-    dex2jar_path = "/usr/local/bin/dex2jar-2.0/d2j-dex2jar.sh"
-    apk_folder = "/home/biwei/Desktop/data2020/Androzoo/Benign/2020/BLE_filter"
-
+    cfr_jar_path = "<CFR_JAR_PATH>"
+    dex2jar_path = "<DEX2JAR_PATH>"
+    apk_folder = "<APK_FOLDER_PATH>"
 
     if not os.path.exists(apk_folder):
         print(f"APK folder does not exist: {apk_folder}")
@@ -115,16 +114,16 @@ def main():
         if apk_file.endswith(".apk"):
             apk_path = os.path.join(apk_folder, apk_file)
             apk_name = os.path.splitext(os.path.basename(apk_path))[0]
-            output_file_name = f"/home/biwei/Desktop/BLE_LLM/ble_functions/data2020/{apk_name}_OpenAI-v2-encrypt-folder-ccc.java"
-            filter_name = f"/home/biwei/Desktop/BLE_LLM/data2020/filter/{apk_name}_OpenAI-v2-encrypt-folder-ccc-filter.java"
-            base_output_dir = f"/home/biwei/Desktop/BLE_LLM/decompiled_apk/data2020/{apk_name}_decompiled"
+            output_file_name = f"<OUTPUT_FILE_DIR>/{apk_name}_OpenAI-v2-encrypt-folder-ccc.java"
+            filter_name = f"<FILTER_FILE_DIR>/{apk_name}_OpenAI-v2-encrypt-folder-ccc-filter.java"
+            base_output_dir = f"<DECOMPILED_OUTPUT_DIR>/{apk_name}_decompiled"
             if os.path.exists(base_output_dir):
                 print(f"APK {os.path.splitext(os.path.basename(apk_path))[0]} already decompiled, skipping.")
-                # exit()
                 continue
             # Analyze APK file
             print(f"Processing APK: {apk_path}")
-            process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_name, base_output_dir,apk_name)
+            process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_name, base_output_dir, apk_name)
+
 
 def find_method_body_in_files(method_name, base_dir):
     """Search for the method name in all .java files in the given directory and extract its body."""
@@ -154,54 +153,16 @@ def find_method_body_in_files(method_name, base_dir):
                     print(f"Error reading file {file_path}: {e}")
     return None, None
 
+
 def confirm_method_with_LLM(method_body):
     """Analyze a Java method using LangChain to determine if it's related to Bluetooth or Authentication."""
-    # chatmodel = ChatOpenAI(
-    #     model="gpt-4o-2024-05-13",
-    #     temperature=0,
-    #     streaming=True,
-    # )
-    # prompt = f"If the following function is related to Bluetooth data flow or device authentication, just answer yes, if not, answer no. The following function is as follows:\n\n{method_body}"
-    # chain = ChatPromptTemplate.from_template(prompt) | chatmodel | StrOutputParser()
-    # result = chain.invoke(method_body)
-
-    # prompt = ChatPromptTemplate.from_template("If the following function is related to Bluetooth data flow or device authentication, just answer yes, if not, answer no. The following function is as follows:{method_body}")
-    # model = ChatOpenAI(model="gpt-4")
-    # output_parser = StrOutputParser()
-    #
-    # chain = prompt | model | output_parser
-    #
-    # result = chain.invoke({"method_body": method_body})
-
     return "Yes"
 
-def process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_name, base_output_dir,apk_name):
 
-    # prompt = ChatPromptTemplate.from_template("给我讲一个关于 {topic}的笑话")
-    # model = ChatOpenAI(model="gpt-4")
-    # output_parser = StrOutputParser()
-    #
-    # chain = prompt | model | output_parser
-    #
-    # print(chain.invoke({"topic": "冰激凌"}))
-    # 分析APK文件
-
+def process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_name, base_output_dir, apk_name):
     a, d, dx = AnalyzeAPK(apk_path)
 
-    # 定义与蓝牙数据流相关和身份认证相关的关键词
-    # bluetooth_keywords = {
-    #     "android/bluetooth/BluetoothAdapter",
-    #     "android/bluetooth/BluetoothDevice",
-    #     "android/bluetooth/BluetoothGatt",
-    #     "android/bluetooth/BluetoothManager",
-    #     "android/bluetooth/BluetoothGattCallback",
-    #     "android/bluetooth/BluetoothGattService",
-    #     "android/bluetooth/BluetoothGattCharacteristic"
-    # }
-    # auth_keywords = {"authenticate", "login", "verify", "authorization", "auth"}
-
     # Define Bluetooth-related and authentication-related keywords
-    # 关键 API 关键词（蓝牙 + 认证）
     bluetooth_keywords = {
         "android/bluetooth/BluetoothAdapter",
         "android/bluetooth/BluetoothDevice",
@@ -238,7 +199,6 @@ def process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_n
         "getBluetoothManager"
     }
 
-    # 蓝牙身份认证相关的关键函数
     bluetooth_auth_methods = {
         "createBond",
         "setPin",
@@ -249,7 +209,6 @@ def process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_n
         "signData",
     }
 
-    # 加密相关关键词（但必须和蓝牙同时出现）
     encryption_keywords = {
         "javax/crypto/Cipher",
         "javax/crypto/SecretKey",
@@ -262,10 +221,8 @@ def process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_n
         "javax/crypto/EncryptedPrivateKeyInfo"
     }
 
-    # 记录符合要求的方法
     method_calls = set()
 
-    # 遍历所有方法
     for method in dx.get_methods():
         m = method.get_method()
         class_name = m.get_class_name()
@@ -280,56 +237,46 @@ def process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_n
             for instruction in basic_block.get_instructions():
                 output = instruction.get_output()
 
-                # 匹配蓝牙 API
                 if any(kw in output for kw in bluetooth_keywords):
                     found_bluetooth = True
 
-                # 匹配身份认证相关 API
                 if any(kw in output for kw in auth_keywords):
                     found_auth = True
 
-                # 匹配蓝牙身份认证相关的函数
                 if any(kw in output for kw in bluetooth_auth_methods):
                     found_bluetooth_auth_method = True
 
-                # 匹配加密 API
                 if any(kw in output for kw in encryption_keywords):
                     found_encryption = True
 
-            # **只记录真正涉及蓝牙和（认证或加密）**的函数
             if (found_bluetooth and found_auth) or (
                     found_bluetooth and found_encryption) or found_bluetooth_auth_method:
                 method_calls.add((class_name, method_name))
-                break  # 结束当前方法的遍历
+                break
 
     print(f"Filtered method calls: {len(method_calls)}")
     print(method_calls)
 
-    """Save method calls information to a file named after the APK."""
-    output_file = f"/home/biwei/Desktop/BLE_LLM/method_calls/2020/{apk_name}_method_calls.txt"
+    output_file = f"<METHOD_CALLS_OUTPUT_DIR>/{apk_name}_method_calls.txt"
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
     with open(output_file, "w", encoding="utf-8") as f:
         for class_name, method_name in method_calls:
             f.write(f"{class_name}.{method_name}\n")
 
-    # 反编译APK文件
     cfr_output_dir_base = decompile_apk(apk_path, base_output_dir, cfr_jar_path, dex2jar_path)
 
-    # 记录已经打印的方法体，防止重复
     printed_methods = set()
     os.makedirs(os.path.dirname(output_file_name), exist_ok=True)
     os.makedirs(os.path.dirname(filter_name), exist_ok=True)
-    # 打印和记录结果
-    with open(output_file_name, "w", encoding='utf-8') as file, open(filter_name, "w",encoding='utf-8') as filtered_file:
+
+    with open(output_file_name, "w", encoding='utf-8') as file, open(filter_name, "w", encoding='utf-8') as filtered_file:
         for class_name, method_name in method_calls:
             if (class_name, method_name) in printed_methods:
                 continue
             printed_methods.add((class_name, method_name))
 
             try:
-                # 使用方法名在反编译后的文件中查找源代码
-
                 java_file_path, method_body = find_method_body_in_files(method_name, cfr_output_dir_base)
                 if java_file_path and method_body:
                     file.write(f"{method_body}\n")
@@ -345,22 +292,7 @@ def process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_n
 
             file.write("\n")
 
-    # pv_file_path = f"./analysis_results/{os.path.splitext(os.path.basename(apk_path))[0]}_bluetooth_filter.pv"
-    #
-    # # 定义ProVerif的命令行命令
-    # command = ['proverif', pv_file_path]
-    #
-    # # 调用ProVerif命令
-    # result = subprocess.run(command, capture_output=True, text=True)
-    #
-    # # 打印ProVerif的输出
-    # print('标准输出:')
-    # print(result.stdout)
-    # print('错误输出:')
-    # print(result.stderr)
-
     print(f"Results written to {output_file_name}")
-
     print(f"Decompiled APK saved in {base_output_dir}")
 
 
