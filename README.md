@@ -1,4 +1,4 @@
-# BLE Communication Protocol Vulnerability Detection Framework
+# VerifiaBLE
 
 This repository contains scripts and tools for detecting potential vulnerabilities in BLE communication protocols of Android applications. The approach involves decompilation, code analysis, formal verification, and iterative repair and evaluation, ensuring security and reliability of BLE-based applications.
 
