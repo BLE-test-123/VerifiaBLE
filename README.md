@@ -15,11 +15,8 @@ The entire process is divided into **five main phases**. Each script corresponds
 3. **`server_auth_identify`**  
    This script verifies whether the extracted BLE-related code snippets contain authentication operations. It uses LLM to assess the presence of these security-critical operations and filters out irrelevant code.
 
-4. **`server_proverif_generate`**  
-   This script generates corresponding ProVerif code from the verified BLE code segments. The generated ProVerif code will be used for formal verification of BLE protocol security.
-
-5. **`command-proverif-error-exact`**  
-   This script repairs any syntactic or semantic errors in the generated ProVerif code. It uses a RAG (Retrieval-Augmented Generation) framework and a dedicated ProVerif knowledge base to automatically fix these issues.
+4. **`server_proverif_generate and Repair`**  
+   This script generates corresponding ProVerif code from the verified BLE code segments. The generated ProVerif code will be used for formal verification of BLE protocol security. It uses a RAG (Retrieval-Augmented Generation) framework and a dedicated ProVerif knowledge base to automatically fix these issues.
 
 ## Features
 
