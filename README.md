@@ -24,7 +24,6 @@ The entire process is divided into 4 scripts. Each script corresponds to a speci
 ✅ LLM-based static analysis and authentication verification  
 ✅ Automatic ProVerif code generation for formal verification  
 ✅ ProVerif code repair to ensure correctness  
-✅ BLE protocol vulnerability detection and security assurance
 
 ## Usage
 
