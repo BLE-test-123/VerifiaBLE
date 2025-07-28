@@ -154,11 +154,6 @@ def find_method_body_in_files(method_name, base_dir):
     return None, None
 
 
-def confirm_method_with_LLM(method_body):
-    """Analyze a Java method using LangChain to determine if it's related to Bluetooth or Authentication."""
-    return "Yes"
-
-
 def process_apk(apk_path, cfr_jar_path, dex2jar_path, output_file_name, filter_name, base_output_dir, apk_name):
     a, d, dx = AnalyzeAPK(apk_path)
 
